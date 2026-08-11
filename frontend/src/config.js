@@ -1,6 +1,8 @@
 // Centralized API configuration
-// Uses VITE_API_URL env var, falling back to the local backend.
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Uses `VITE_API_URL` when provided. During development the dev server
+// proxy forwards `/api` to the backend so we prefer an empty default
+// which results in relative `/api` requests (avoiding CORS issues).
+export const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 // Helper to get the stored JWT
 export const getToken = () => localStorage.getItem('token');

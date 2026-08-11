@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Cpu, LogIn, UserPlus, Loader2 } from 'lucide-react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../config';
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('login'); // 'login' | 'register'
@@ -54,21 +53,19 @@ export default function Login({ onLogin }) {
           <div className="flex mb-6 bg-gray-800 rounded-lg p-1">
             <button
               onClick={() => { setMode('login'); setError(''); }}
-              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${
-                mode === 'login'
+              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${mode === 'login'
                   ? 'bg-emerald-600 text-white'
                   : 'text-gray-400 hover:text-gray-200'
-              }`}
+                }`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setMode('register'); setError(''); }}
-              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${
-                mode === 'register'
+              className={`flex-1 py-2 rounded-md text-sm font-medium transition ${mode === 'register'
                   ? 'bg-emerald-600 text-white'
                   : 'text-gray-400 hover:text-gray-200'
-              }`}
+                }`}
             >
               Register
             </button>
