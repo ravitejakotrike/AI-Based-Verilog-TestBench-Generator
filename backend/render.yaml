@@ -11,15 +11,13 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: AI_PROVIDER
-        value: openai
-      - key: OPENAI_API_KEY
-        sync: false
+        value: gemini
       - key: GEMINI_API_KEY
         sync: false
-      - key: OPENAI_MODEL
-        value: gpt-4o-mini
       - key: GEMINI_MODEL
         value: gemini-1.5-flash
+      - key: USE_AI
+        value: "true"
       - key: DEMO_USERNAME
         value: demo
       - key: DEMO_PASSWORD
