@@ -4,9 +4,8 @@ services:
     name: verilog-tb-generator-backend
     runtime: python
     rootDir: backend
-    # Install Rust toolchain first (for packages that use maturin/cargo),
-    # then upgrade pip and install Python requirements.
-    buildCommand: "bash -lc 'curl https://sh.rustup.rs -sSf | sh -s -- -y && source $HOME/.cargo/env && python -m pip install --upgrade pip && pip install -r requirements.txt'"
+    pythonVersion: "3.11.0"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
     startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: SECRET_KEY
