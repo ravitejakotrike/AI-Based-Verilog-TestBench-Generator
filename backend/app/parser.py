@@ -81,8 +81,13 @@ def _regex_parse(source: str) -> dict:
 
     # Parameters
     parameters = []
-    for m in _PARAM_RE.finditer(clean_source):
-        parameters.append({"name": m.group(1), "value": m.group(2)})
+    param_blocks = re.findall(r"\b(?:parameter|localparam)\s+([^;)]+)", clean_source)
+    for block in param_blocks:
+        parts = block.split(',')
+        for part in parts:
+            m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)", part.strip())
+            if m:
+                parameters.append({"name": m.group(1), "value": m.group(2).strip()})
 
     # Ports
     inputs = []
