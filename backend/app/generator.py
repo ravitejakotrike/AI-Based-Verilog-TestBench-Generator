@@ -248,7 +248,8 @@ def _local_generate(metadata: dict) -> str:
         input_regs.append(name)
         width = p.get("width", "1")
         if width and width != "1":
-            decl_lines.append(f"    reg {width} {name};")
+            width_str = width if width.startswith("[") else f"[{width}]"
+            decl_lines.append(f"    reg {width_str} {name};")
         else:
             decl_lines.append(f"    reg {name};")
 
@@ -256,7 +257,8 @@ def _local_generate(metadata: dict) -> str:
         name = sig(p["name"])
         width = p.get("width", "1")
         if width and width != "1":
-            decl_lines.append(f"    wire {width} {name};")
+            width_str = width if width.startswith("[") else f"[{width}]"
+            decl_lines.append(f"    wire {width_str} {name};")
         else:
             decl_lines.append(f"    wire {name};")
 
@@ -265,11 +267,12 @@ def _local_generate(metadata: dict) -> str:
     decl_lines.append(f"    reg {clk_sig} = 0;")
     decl_lines.append(f"    reg {rst_sig} = {'1' if reset_is_active_low else '0'};")
 
+    io_names = set([sig(p["name"]) for p in inputs] + [sig(p["name"]) for p in outputs])
     param_lines = []
     for p in parameters:
         name = p.get("name", "").strip()
         value = p.get("value", "").strip()
-        if name and value:
+        if name and value and sig(name) not in io_names:
             param_lines.append(f"    parameter {name} = {value};")
 
     port_conns = []
@@ -339,7 +342,7 @@ module {module_name}_tb;
 {reset_seq};
 
         // Stimulus vectors
-{stim_text};
+{stim_text}
 
         // Finish simulation
         $finish;
