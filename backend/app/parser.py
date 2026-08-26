@@ -39,15 +39,13 @@ _PARAM_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Matches a single port declaration: direction [type] [signed] [width] name
-# Handles ANSI-style inline declarations and standalone declarations.
+# Matches a port declaration: direction [type] [signed] [width] name(s)
+# Handles ANSI-style inline declarations and standalone declarations with multiple ports.
 _PORT_DECL_RE = re.compile(
     r"\b(?:input|output|inout)\b"
-    r"(?:\s+(?:reg|wire|logic|signed|unsigned))?"
-    r"(?:\s+(?:reg|wire|logic|signed|unsigned))?"
+    r"(?:\s+(?:reg|wire|logic|signed|unsigned))*"
     r"(?:\s*\[([^\]]*)\])?"              # optional width e.g. [7:0]
-    r"\s+([A-Za-z_][A-Za-z0-9_]*)"       # port name
-    r"(?=\s*[,);])",                     # must be followed by , ) or ;
+    r"\s+((?:[A-Za-z_][A-Za-z0-9_]*\s*,\s*)*[A-Za-z_][A-Za-z0-9_]*)", # port name(s)
     re.IGNORECASE,
 )
 
