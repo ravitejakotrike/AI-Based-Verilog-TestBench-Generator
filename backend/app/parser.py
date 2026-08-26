@@ -45,7 +45,7 @@ _PORT_DECL_RE = re.compile(
     r"\b(?:input|output|inout)\b"
     r"(?:\s+(?:reg|wire|logic|signed|unsigned))*"
     r"(?:\s*\[([^\]]*)\])?"              # optional width e.g. [7:0]
-    r"\s+((?:[A-Za-z_][A-Za-z0-9_]*\s*,\s*)*[A-Za-z_][A-Za-z0-9_]*)", # port name(s)
+    r"\s+((?:(?!(?:input|output|inout|wire|reg|logic|signed|unsigned)\b)[A-Za-z_][A-Za-z0-9_]*\s*,\s*)*(?!(?:input|output|inout|wire|reg|logic|signed|unsigned)\b)[A-Za-z_][A-Za-z0-9_]*)", # port name(s)
     re.IGNORECASE,
 )
 
