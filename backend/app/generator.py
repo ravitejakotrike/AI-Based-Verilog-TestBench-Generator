@@ -80,28 +80,23 @@ PARAMETERS:
 CLOCK SIGNAL(S): {', '.join(clocks) if clocks else 'clk (assumed)'}
 RESET SIGNAL(S): {', '.join(resets) if resets else 'rst_n (assumed)'}
 
-The testbench MUST include:
-1. Timescale directive: `timescale 1ns / 1ps
-2. Declarations:
-   - reg for every input ({', '.join(input_names) if input_names else 'none'})
-   - wire for every output ({', '.join(output_names) if output_names else 'none'})
-   - reg for the clock signal ({clock_name})
-   - reg for the reset signal ({reset_name})
-3. If parameters exist, declare them with the SAME values as the module defaults.
-4. DUT instantiation: {module_name} <instance_name> (
-     .<port>(<signal>),
-     ...
-   );
-   Use matching signal names for each port.
-5. Clock generation: always #5 {clock_name} = ~{clock_name};
-6. Initial block with:
-   - Reset sequence: assert reset for 20ns, then deassert it (respect {'active-low' if active_low else 'active-high'} polarity).
-   - Stimulus vectors that exercise the module's functionality (test multiple meaningful input combinations, spanning at least 100ns of simulation).
-   - $finish to end simulation.
-7. Monitor statements: $dumpfile, $dumpvars, $monitor to print signal changes.
-8. $display statements to print informative messages about test scenarios.
+    The testbench MUST strictly follow these rules:
+    1. Timescale directive: `timescale 1ns / 1ps
+    2. Declarations:
+       - Declare a `reg` ONLY for the inputs explicitly listed above.
+       - Declare a `wire` ONLY for the outputs explicitly listed above.
+       - STRICTLY FORBIDDEN: Do NOT invent, declare, or drive any extra signals, internal variables, or unnecessary wires that are not part of the DUT ports.
+    3. If parameters exist, declare them with the SAME values as the module defaults.
+    4. DUT instantiation: Use explicit port mapping for every port.
+    5. Clock generation: always #5 {clock_name} = ~{clock_name};
+    6. Initial block with:
+       - Reset sequence: assert reset for 20ns, then deassert it (respect {'active-low' if active_low else 'active-high'} polarity).
+       - Stimulus vectors that exercise the module's functionality.
+       - $finish to end simulation.
+    7. Monitor statements: $dumpfile("{module_name}_tb.vcd"); $dumpvars(0, {module_name}_tb);
+    8. Verify syntax against standard Verilog-2001. Ensure no trailing commas in port maps and no missing semicolons.
 
-Output ONLY the complete Verilog testbench code wrapped in a single ```verilog code fence. Do not include any extra explanation outside the code fence."""
+    Output ONLY the complete Verilog testbench code wrapped in a single ```verilog code fence. Do not include any extra text, markdown, or explanations outside the code fence."""
 
     return prompt
 
