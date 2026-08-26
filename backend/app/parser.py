@@ -62,23 +62,32 @@ def _parse_width(width: str | None) -> str:
     return width.strip()
 
 
+def _remove_comments(text: str) -> str:
+    """Remove line and block comments to prevent false regex matches."""
+    text = re.sub(r'//.*', '', text)
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
+    return text
+
+
 def _regex_parse(source: str) -> dict:
     """Fallback parser using regular expressions."""
+    clean_source = _remove_comments(source)
+
     # Module name
     module_match = re.search(
-        r"\bmodule\s+([A-Za-z_][A-Za-z0-9_]*)", source
+        r"\bmodule\s+([A-Za-z_][A-Za-z0-9_]*)", clean_source
     )
     module_name = module_match.group(1) if module_match else "unknown_module"
 
     # Parameters
     parameters = []
-    for m in _PARAM_RE.finditer(source):
+    for m in _PARAM_RE.finditer(clean_source):
         parameters.append({"name": m.group(1), "value": m.group(2)})
 
     # Ports
     inputs = []
     outputs = []
-    for m in _PORT_DECL_RE.finditer(source):
+    for m in _PORT_DECL_RE.finditer(clean_source):
         direction = m.group(0).split()[0].lower()
         width = _parse_width(m.group(1))
         names = [n.strip() for n in m.group(2).split(",") if n.strip()]
